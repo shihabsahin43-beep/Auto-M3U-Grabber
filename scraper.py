@@ -3,59 +3,52 @@ import re
 
 def grab_links():
     playlist = "#EXTM3U\n"
-    # সকার স্ট্রিম পেজ থেকে লিঙ্ক নেওয়ার জন্য উন্নত হেডার
+    # এই সাইটটি ভিজিট করার জন্য হেডার
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Referer": "https://footystream.pk/"
+        "Referer": "http://iptvidn.com/"
     }
 
     try:
-        # ১. সরাসরি সকার স্ট্রিম পেজটি লোড করা
-        target_url = "https://footystream.pk/soccer-streams"
+        # ১. সরাসরি মেইন পেজটি লোড করা
+        target_url = "http://iptvidn.com/"
         response = requests.get(target_url, headers=headers, timeout=15)
         html = response.text
 
-        # ২. ম্যাচের কার্ড বা লিঙ্কগুলো খুঁজে বের করা
-        # এখানে সাধারণত 'href' এর ভেতর ম্যাচের নাম থাকে
-        matches = re.findall(r'href="(https://footystream\.pk/[^"]+)"', html)
+        # ২. m3u8 বা প্লেয়ারের লিঙ্কগুলো সরাসরি খোঁজা
+        # এই সাইটটি অনেক সময় পেজেই সরাসরি m3u8 লিঙ্ক দিয়ে দেয়
+        direct_streams = re.findall(r'[\'"](https?://[^\'"]+\.m3u8[^\'"]*)[\'"]', html)
         
-        # ডুপ্লিকেট লিঙ্ক সরানো
-        unique_matches = list(dict.fromkeys(matches))
-        
-        count = 0
-        for match_url in unique_matches:
-            # শুধু আসল ম্যাচের লিঙ্কগুলো নিবে (অপ্রাসঙ্গিক লিঙ্ক বাদ দিবে)
-            if "/soccer-streams" in match_url or count > 8:
-                continue
-                
-            title = match_url.rstrip('/').split('/')[-1].replace('-', ' ').upper()
-            
-            try:
-                # ৩. ম্যাচের ভেতরের পেজে গিয়ে m3u8 বা আইফ্রেম সোর্স খোঁজা
-                sub_res = requests.get(match_url, headers=headers, timeout=10)
-                sub_html = sub_res.text
+        # ৩. যদি সরাসরি না পায়, তবে ভেতরের পোস্ট লিঙ্কগুলো খোঁজা
+        post_links = re.findall(r'href="(http://iptvidn\.com/[^"]+)"', html)
+        unique_posts = list(dict.fromkeys(post_links))
 
-                # এই সাইটগুলো অনেক সময় জাভাস্ক্রিপ্টে লিঙ্ক লুকিয়ে রাখে, তাই আমরা m3u8 খুঁজি
-                stream = re.search(r'[\'"](https?://[^\'"]+\.m3u8[^\'"]*)[\'"]', sub_html)
+        # সরাসরি পাওয়া লিঙ্কগুলো আগে যোগ করা
+        for stream in list(set(direct_streams))[:10]:
+            playlist += f'#EXTINF:-1 group-title="IDN Direct", CHANNEL-{direct_streams.index(stream)}\n{stream}\n'
+
+        # পোস্টের ভেতরের লিঙ্কগুলো খোঁজা
+        for post_url in unique_posts[:5]:
+            if "category" in post_url or post_url == target_url:
+                continue
+            
+            title = post_url.rstrip('/').split('/')[-1].replace('-', ' ').upper()
+            try:
+                sub_res = requests.get(post_url, headers=headers, timeout=10)
+                sub_stream = re.search(r'[\'"](https?://[^\'"]+\.m3u8[^\'"]*)[\'"]', sub_res.text)
                 
-                if stream:
-                    stream_url = stream.group(1)
-                    playlist += f'#EXTINF:-1 group-title="Soccer Live", {title}\n{stream_url}\n'
-                else:
-                    # যদি সরাসরি লিঙ্ক না পায়, তবে অন্তত পেজ লিঙ্কটি দিচ্ছি
-                    playlist += f'#EXTINF:-1 group-title="Soccer Web", {title} (WATCH ON WEB)\n{match_url}\n'
-                
-                count += 1
+                if sub_stream:
+                    playlist += f'#EXTINF:-1 group-title="IDN Post", {title}\n{sub_stream.group(1)}\n'
             except:
                 continue
 
     except Exception as e:
         print(f"Error: {e}")
 
-    # ফাইনাল প্লেলিস্ট সেভ করা
+    # ফাইল সেভ করা
     with open("playlist.m3u", "w", encoding="utf-8") as f:
         f.write(playlist)
-    print("Soccer Playlist updated successfully!")
+    print("IDN Playlist updated!")
 
 if __name__ == "__main__":
     grab_links()
