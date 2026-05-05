@@ -1,17 +1,19 @@
 #EXTM3U
-#EXTINF:-1 group-title="Web Streams", STYLE.CSS
+#EXTINF:-1 group-title="Soccer Web", STYLE.CSS (WATCH ON WEB)
 https://footystream.pk/assets/css/style.css
-#EXTINF:-1 group-title="Web Streams", LOGO.WEBP?V=1.01
+#EXTINF:-1 group-title="Soccer Web", LOGO.WEBP?V=1.01 (WATCH ON WEB)
 https://footystream.pk/assets/logo.webp?v=1.01
-#EXTINF:-1 group-title="Web Streams", ICON 192X192.PNG
+#EXTINF:-1 group-title="Soccer Web", ICON 192X192.PNG (WATCH ON WEB)
 https://footystream.pk/assets/icons/icon-192x192.png
-#EXTINF:-1 group-title="Web Streams", MANIFEST.JSON
+#EXTINF:-1 group-title="Soccer Web", MANIFEST.JSON (WATCH ON WEB)
 https://footystream.pk/assets/manifest.json
-#EXTINF:-1 group-title="Web Streams", SOCCER STREAMS
-https://footystream.pk/soccer-streams
-#EXTINF:-1 group-title="Web Streams", AMERICAN FOOTBALL
+#EXTINF:-1 group-title="Soccer Web", AMERICAN FOOTBALL (WATCH ON WEB)
 https://footystream.pk/american-football
-#EXTINF:-1 group-title="Web Streams", NBA STREAMS
+#EXTINF:-1 group-title="Soccer Web", NBA STREAMS (WATCH ON WEB)
 https://footystream.pk/nba-streams
-#EXTINF:-1 group-title="Web Streams", F1 STREAMS
+#EXTINF:-1 group-title="Soccer Web", F1 STREAMS (WATCH ON WEB)
 https://footystream.pk/f1-streams
+#EXTINF:-1 group-title="Soccer Web", MOTOGP STREAMS (WATCH ON WEB)
+https://footystream.pk/motogp-streams
+#EXTINF:-1 group-title="Soccer Web", UFC STREAMS FREE (WATCH ON WEB)
+https://footystream.pk/ufc-streams-free
