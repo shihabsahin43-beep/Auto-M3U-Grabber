@@ -5,62 +5,55 @@ def grab_links():
     playlist = "#EXTM3U\n"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Referer": "https://footystream.pk/soccer-streams"
+        "Referer": "https://footystream.pk/"
     }
 
     try:
-        # ১. সকার স্ট্রিম পেজটি লোড করা যেখানে লাইভ ম্যাচ থাকে
+        # ১. সকার স্ট্রিম পেজটি লোড করা
         target_url = "https://footystream.pk/soccer-streams"
         response = requests.get(target_url, headers=headers, timeout=15)
         html = response.text
 
-        # ২. লাইভ ম্যাচের লিঙ্কগুলো খোঁজা (অ্যাড লিঙ্ক ফিল্টার করা)
-        # সাধারণত ম্যাচের লিঙ্কগুলোতে 'soccer-stream' বা 'live' কথাটি থাকে না, থাকে সরাসরি দলের নাম
+        # ২. স্ক্রিনশটে দেখা ম্যাচের ব্লকগুলো খুঁজে বের করা
+        # প্রতিটি ম্যাচের জন্য তারা সাধারণত নির্দিষ্ট ক্লাস বা স্লাগ ব্যবহার করে
         matches = re.findall(r'href="(https://footystream\.pk/[^"]+)"', html)
         
         unique_matches = []
+        # অপ্রাসঙ্গিক লিঙ্কগুলো ফিল্টার করা
         for link in matches:
-            # সকার স্ট্রিমস পেজ বা প্রাইভেসি পলিসি বাদ দিয়ে শুধুমাত্র ম্যাচের লিঙ্কগুলো নেওয়া
-            if "/soccer-streams" not in link and "privacy" not in link and "contact" not in link:
-                if link not in unique_matches:
-                    unique_matches.append(link)
+            if any(x in link for x in ["soccer-streams", "privacy", "contact", "dmca"]):
+                continue
+            if link not in unique_matches:
+                unique_matches.append(link)
 
-        count = 0
-        for match_url in unique_matches:
-            if count >= 10: break # অনেক বেশি লিঙ্ক হয়ে গেলে প্লেলিস্ট স্লো হয়ে যায়
-            
-            # টাইটেল সুন্দর করা (URL থেকে নাম নিয়ে)
+        print(f"Found {len(unique_matches)} potential match links.")
+
+        for match_url in unique_matches[:10]:
+            # টাইটেল সুন্দর করা (যেমন: ARSENAL VS ATLETICO MADRID)
             title = match_url.rstrip('/').split('/')[-1].replace('-', ' ').upper()
             
             try:
-                # ৩. ম্যাচের ভেতর ঢুকে আসল স্ট্রিমিং সার্ভার খোঁজা
+                # ৩. ম্যাচের ভেতর ঢুকে প্লেয়ারের সোর্স খোঁজা
                 sub_res = requests.get(match_url, headers=headers, timeout=10)
                 sub_html = sub_res.text
 
-                # m3u8 বা .ts ফাইল খোঁজার জন্য আরও উন্নত প্যাটার্ন
-                # এই সাইটগুলো অনেক সময় iframe এর ভেতর লিঙ্ক লুকিয়ে রাখে
-                stream = re.search(r'[\'"](https?://[^\'"]+\.(?:m3u8|ts)[^\'"]*)[\'"]', sub_html)
+                # m3u8 বা আইফ্রেম সোর্স খোঁজা (এটিই আসল স্ট্রিমিং লিঙ্ক)
+                stream = re.search(r'[\'"](https?://[^\'"]+\.m3u8[^\'"]*)[\'"]', sub_html)
                 
                 if stream:
-                    stream_url = stream.group(1)
-                    # কিছু লিঙ্ক হয়তো ফেইক হতে পারে, সেগুলোকে বাদ দেওয়ার চেষ্টা
-                    if "ads" not in stream_url and "analytics" not in stream_url:
-                        playlist += f'#EXTINF:-1 group-title="LIVE FOOTBALL", {title}\n{stream_url}\n'
-                        count += 1
+                    playlist += f'#EXTINF:-1 group-title="Live Sports", {title}\n{stream.group(1)}\n'
                 else:
-                    # যদি সরাসরি না পাওয়া যায়, তবে অন্তত পেজ লিঙ্কটি রাখা যাতে ম্যানুয়ালি দেখা যায়
-                    playlist += f'#EXTINF:-1 group-title="WEB STREAM", {title}\n{match_url}\n'
-                    count += 1
+                    # যদি ম্যাচ শুরু না হয়, তবে অন্তত পেজ লিঙ্কটা দিচ্ছি যাতে পরে দেখা যায়
+                    playlist += f'#EXTINF:-1 group-title="Upcoming Matches", {title} (STILL NOT LIVE)\n{match_url}\n'
             except:
                 continue
 
     except Exception as e:
         print(f"Error: {e}")
 
-    # ফাইল সেভ করা
     with open("playlist.m3u", "w", encoding="utf-8") as f:
         f.write(playlist)
-    print(f"Playlist updated with {count} matches!")
+    print("Final Playlist updated!")
 
 if __name__ == "__main__":
     grab_links()
