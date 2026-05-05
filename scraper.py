@@ -1,49 +1,57 @@
 import requests
 import re
-import base64
 
 def grab_links():
     playlist = "#EXTM3U\n"
-    # ব্রাউজারের মতো ছদ্মবেশ ধরার জন্য শক্তিশালী হেডার
+    # ফুটস্ট্রিম সাইটটি ভিজিট করার জন্য হেডার
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Referer": "https://eplayhd.com/"
+        "Referer": "https://footystream.pk/"
     }
 
     try:
-        # ১. হোমপেজ থেকে লাইভ ইভেন্ট বের করা
-        response = requests.get("https://eplayhd.com/", headers=headers, timeout=15)
-        # ম্যাচ লিঙ্কের নতুন প্যাটার্ন
-        matches = re.findall(r'href="(https://eplayhd\.com/(?:match|live)/[^"]+)"', response.text)
+        # ১. হোমপেজ থেকে লাইভ ইভেন্ট বা চ্যানেলের লিস্ট আনা
+        response = requests.get("https://footystream.pk/", headers=headers, timeout=15)
+        html = response.text
+
+        # ২. ম্যাচের লিঙ্ক বা চ্যানেল লিঙ্ক খুঁজে বের করা
+        # এই সাইটটি সাধারণত 'live-stream' বা 'channel' স্লাগ ব্যবহার করে
+        matches = re.findall(r'href="(https://footystream\.pk/[^"]+)"', html)
         
-        # ডুপ্লিকেট লিঙ্ক সরানো
-        unique_matches = list(dict.fromkeys(matches))
-        
-        for match_url in unique_matches[:6]: # প্রথম ৬টি ম্যাচ চেক করবে
+        # ডুপ্লিকেট সরানো এবং অপ্রাসঙ্গিক লিঙ্ক (যেমন privacy policy) বাদ দেওয়া
+        unique_matches = []
+        for link in matches:
+            if any(x in link for x in ['channel', 'stream', 'live']) and link not in unique_matches:
+                unique_matches.append(link)
+
+        for match_url in unique_matches[:8]: # প্রথম ৮টি লিঙ্ক চেক করবে
+            # টাইটেল তৈরি করা (URL থেকে নাম নিয়ে)
             title = match_url.rstrip('/').split('/')[-1].replace('-', ' ').upper()
             
-            # ২. প্রতিটি ম্যাচের পেজে গিয়ে লিঙ্ক খোঁজা
-            sub_res = requests.get(match_url, headers=headers, timeout=15)
-            html_content = sub_res.text
+            # ৩. ভেতরের পেজে গিয়ে m3u8 বা iframe সোর্স খোঁজা
+            try:
+                sub_res = requests.get(match_url, headers=headers, timeout=10)
+                sub_html = sub_res.text
 
-            # ৩. m3u8 বা ts লিঙ্ক খোঁজার মাল্টিপল প্যাটার্ন (Base64 বা Hidden লিঙ্ক চেক করবে)
-            stream_links = re.findall(r'[\'"](https?://[^\'"]+\.(?:m3u8|ts)[^\'"]*)[\'"]', html_content)
-            
-            if stream_links:
-                # প্রথম ভ্যালিড লিঙ্কটি নিবে
-                playlist += f'#EXTINF:-1 group-title="Live Sports", {title}\n{stream_links[0]}\n'
-            else:
-                # যদি সরাসরি না পায়, তবে অন্তত পেজ লিঙ্কটা রাখছি যাতে তুমি ক্লিক করে দেখতে পারো
-                playlist += f'#EXTINF:-1 group-title="Manual Links", {title} (OPEN IN BROWSER)\n{match_url}\n'
+                # m3u8 লিঙ্ক খোঁজার চেষ্টা
+                stream = re.search(r'[\'"](https?://[^\'"]+\.m3u8[^\'"]*)[\'"]', sub_html)
+                
+                if stream:
+                    stream_url = stream.group(1)
+                    playlist += f'#EXTINF:-1 group-title="FootyStream Live", {title}\n{stream_url}\n'
+                else:
+                    # যদি সরাসরি m3u8 না পায়, তবে অন্তত ওই পেজের লিঙ্কটি দিচ্ছি যাতে আপনি অ্যাপে ট্রাই করতে পারেন
+                    playlist += f'#EXTINF:-1 group-title="Web Streams", {title}\n{match_url}\n'
+            except:
+                continue
 
     except Exception as e:
         print(f"Error: {e}")
 
-    # ফাইলটি সেভ করা
+    # ফাইল সেভ করা
     with open("playlist.m3u", "w", encoding="utf-8") as f:
         f.write(playlist)
-    print("Playlist updated successfully!")
+    print("FootyStream Playlist updated!")
 
 if __name__ == "__main__":
     grab_links()
-    
