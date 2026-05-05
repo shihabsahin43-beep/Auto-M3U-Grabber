@@ -1,1 +1,17 @@
 #EXTM3U
+#EXTINF:-1 group-title="Web Streams", STYLE.CSS
+https://footystream.pk/assets/css/style.css
+#EXTINF:-1 group-title="Web Streams", LOGO.WEBP?V=1.01
+https://footystream.pk/assets/logo.webp?v=1.01
+#EXTINF:-1 group-title="Web Streams", ICON 192X192.PNG
+https://footystream.pk/assets/icons/icon-192x192.png
+#EXTINF:-1 group-title="Web Streams", MANIFEST.JSON
+https://footystream.pk/assets/manifest.json
+#EXTINF:-1 group-title="Web Streams", SOCCER STREAMS
+https://footystream.pk/soccer-streams
+#EXTINF:-1 group-title="Web Streams", AMERICAN FOOTBALL
+https://footystream.pk/american-football
+#EXTINF:-1 group-title="Web Streams", NBA STREAMS
+https://footystream.pk/nba-streams
+#EXTINF:-1 group-title="Web Streams", F1 STREAMS
+https://footystream.pk/f1-streams
