@@ -1,1 +1,21 @@
 #EXTM3U
+#EXTINF:-1 group-title="WEB STREAM", STYLE.CSS
+https://footystream.pk/assets/css/style.css
+#EXTINF:-1 group-title="WEB STREAM", LOGO.WEBP?V=1.01
+https://footystream.pk/assets/logo.webp?v=1.01
+#EXTINF:-1 group-title="WEB STREAM", ICON 192X192.PNG
+https://footystream.pk/assets/icons/icon-192x192.png
+#EXTINF:-1 group-title="WEB STREAM", MANIFEST.JSON
+https://footystream.pk/assets/manifest.json
+#EXTINF:-1 group-title="WEB STREAM", AMERICAN FOOTBALL
+https://footystream.pk/american-football
+#EXTINF:-1 group-title="WEB STREAM", NBA STREAMS
+https://footystream.pk/nba-streams
+#EXTINF:-1 group-title="WEB STREAM", F1 STREAMS
+https://footystream.pk/f1-streams
+#EXTINF:-1 group-title="WEB STREAM", MOTOGP STREAMS
+https://footystream.pk/motogp-streams
+#EXTINF:-1 group-title="WEB STREAM", UFC STREAMS FREE
+https://footystream.pk/ufc-streams-free
+#EXTINF:-1 group-title="WEB STREAM", RUGBY STREAMS
+https://footystream.pk/rugby-streams
