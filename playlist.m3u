@@ -1,21 +1,25 @@
 #EXTM3U
-#EXTINF:-1 group-title="Upcoming Matches", STYLE.CSS (STILL NOT LIVE)
-https://footystream.pk/assets/css/style.css
-#EXTINF:-1 group-title="Upcoming Matches", LOGO.WEBP?V=1.01 (STILL NOT LIVE)
-https://footystream.pk/assets/logo.webp?v=1.01
-#EXTINF:-1 group-title="Upcoming Matches", ICON 192X192.PNG (STILL NOT LIVE)
-https://footystream.pk/assets/icons/icon-192x192.png
-#EXTINF:-1 group-title="Upcoming Matches", MANIFEST.JSON (STILL NOT LIVE)
-https://footystream.pk/assets/manifest.json
-#EXTINF:-1 group-title="Upcoming Matches", AMERICAN FOOTBALL (STILL NOT LIVE)
-https://footystream.pk/american-football
-#EXTINF:-1 group-title="Upcoming Matches", NBA STREAMS (STILL NOT LIVE)
-https://footystream.pk/nba-streams
-#EXTINF:-1 group-title="Upcoming Matches", F1 STREAMS (STILL NOT LIVE)
-https://footystream.pk/f1-streams
-#EXTINF:-1 group-title="Upcoming Matches", MOTOGP STREAMS (STILL NOT LIVE)
-https://footystream.pk/motogp-streams
-#EXTINF:-1 group-title="Upcoming Matches", UFC STREAMS FREE (STILL NOT LIVE)
-https://footystream.pk/ufc-streams-free
-#EXTINF:-1 group-title="Upcoming Matches", RUGBY STREAMS (STILL NOT LIVE)
-https://footystream.pk/rugby-streams
+#EXTINF:-1 group-title="UPCOMING", SOCCER STREAMS
+https://footystream.pk/soccer-streams
+#EXTINF:-1 group-title="UPCOMING", CRICHD FREE SPORTS
+https://footystream.pk/crichd-free-sports
+#EXTINF:-1 group-title="UPCOMING", FIFA WORLD CUP
+https://footystream.pk/leagues/fifa-world-cup
+#EXTINF:-1 group-title="UPCOMING", NFL STREAMS
+https://footystream.pk/leagues/nfl-streams
+#EXTINF:-1 group-title="UPCOMING", EPL STREAMS
+https://footystream.pk/leagues/epl-streams
+#EXTINF:-1 group-title="UPCOMING", EFL STREAMS
+https://footystream.pk/leagues/efl-streams
+#EXTINF:-1 group-title="UPCOMING", ENGLISH FA CUP
+https://footystream.pk/leagues/english-fa-cup
+#EXTINF:-1 group-title="UPCOMING", LALIGA STREAMS
+https://footystream.pk/leagues/laliga-streams
+#EXTINF:-1 group-title="UPCOMING", UCL STREAMS
+https://footystream.pk/leagues/ucl-streams
+#EXTINF:-1 group-title="UPCOMING", FRENCH LIGUE 1
+https://footystream.pk/leagues/french-ligue-1
+#EXTINF:-1 group-title="UPCOMING", SERIE A LIVE STREAM FREE
+https://footystream.pk/leagues/serie-a-live-stream-free
+#EXTINF:-1 group-title="UPCOMING", EUROPA LEAGUE
+https://footystream.pk/leagues/europa-league
